@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EShopClaude.Web\EShopClaude.Web.csproj" />
-    <ProjectReference Include="..\EShopClaude.ApiService\EShopClaude.ApiService.csproj" />
   </ItemGroup>
 
 </Project>
