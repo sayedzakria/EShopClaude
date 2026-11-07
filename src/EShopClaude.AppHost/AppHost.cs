@@ -1,5 +1,12 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+var postgres = builder.AddPostgres("postgres")
+    .WithPgAdmin();
+var catalogdb = postgres.AddDatabase("catalogdb");
+var orderingdb = postgres.AddDatabase("orderingdb");
+
+var redis = builder.AddRedis("redis");
+
 var catalogApi = builder.AddProject<Projects.EShopClaude_Catalog_Api>("catalogapi")
     .WithHttpHealthCheck("/health");
 

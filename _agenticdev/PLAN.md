@@ -38,28 +38,32 @@ Get all four projects to exist, build, and start together under one AppHost, wit
 
 Stand up the data stores in AppHost and confirm each service can reach its own store, before any domain logic uses them.
 
-### Step 1.1 — Add PostgreSQL server with `catalogdb` and `orderingdb`, plus pgAdmin
-- **Tasks:** Add `Aspire.Hosting.PostgreSQL` package reference to `EShopClaude.AppHost`. In `AppHost.cs`, add one Postgres server resource with `.WithPgAdmin()`, and two database resources from it: `catalogdb`, `orderingdb`.
-- **Projects touched:** `EShopClaude.AppHost`.
-- **Verify:** Aspire run. Postgres resource and both database resources show green. pgAdmin resource is reachable from the dashboard and can connect to the Postgres server (browser check: log into pgAdmin, see both empty databases listed).
+> **Infrastructure-only slice:** sub-steps 1.1a–1.2c below add the data-store resources to the AppHost and the Aspire client packages to the services. Nothing connects a service to a store yet — no `WithReference`/`WaitFor`, no `AddNpgsqlDbContext`/`AddRedisClient`, no DbContext/entities/seed. That wiring starts at Step 1.3. All Aspire packages are pinned to `13.6.4` to match `Aspire.AppHost.Sdk`.
 
-### Step 1.2 — Add Redis for basket storage
-- **Tasks:** Add `Aspire.Hosting.Redis` package reference to `EShopClaude.AppHost`. Add a Redis resource in `AppHost.cs`.
+### Step 1.1 — Add PostgreSQL server with `catalogdb` and `orderingdb`, plus pgAdmin
+- **1.1a — Hosting package.** Add `Aspire.Hosting.PostgreSQL` 13.6.4 to `EShopClaude.AppHost`. *Verify:* build succeeds.
+- **1.1b — Server + pgAdmin.** In `AppHost.cs`, add one Postgres server resource (`postgres`) with `.WithPgAdmin()`. No data volume. *Verify:* Aspire run — Postgres and pgAdmin show green.
+- **1.1c — Databases.** Add two database resources from that server: `catalogdb`, `orderingdb`. *Verify:* Aspire run — both databases show green. pgAdmin is reachable from the dashboard and can connect to the server (browser check: see both empty databases listed).
 - **Projects touched:** `EShopClaude.AppHost`.
-- **Verify:** Aspire run. Redis resource shows green in the dashboard.
+
+### Step 1.2 — Add Redis for basket storage, and the service client packages
+- **1.2a — Hosting package.** Add `Aspire.Hosting.Redis` 13.6.4 to `EShopClaude.AppHost`. *Verify:* build succeeds.
+- **1.2b — Redis resource.** Add a Redis resource (`redis`) in `AppHost.cs`. No data volume. *Verify:* Aspire run — Redis shows green in the dashboard.
+- **1.2c — Client integration packages (packages only).** Add `Aspire.Npgsql.EntityFrameworkCore.PostgreSQL` 13.6.4 to `Catalog.Api` and `Ordering.Api`; add `Aspire.StackExchange.Redis` 13.6.4 to `Basket.Api`. No code uses them yet. *Verify:* build succeeds; Aspire run — all resources (data stores and the four existing ones) still green.
+- **Projects touched:** `EShopClaude.AppHost`, `Catalog.Api`, `Ordering.Api`, `Basket.Api` (1.2c: `.csproj` only).
 
 ### Step 1.3 — Connect `Catalog.Api` to `catalogdb` and define the `Product` schema
-- **Tasks:** Reference `catalogdb` from `Catalog.Api` in `AppHost.cs` (`WithReference(catalogdb).WaitFor(catalogdb)`). In `Catalog.Api`, add EF Core (or chosen data access) wiring for the `Product` entity (`Id, Name, Description, Price, Stock` per spec §3) and apply the schema (migration or `EnsureCreated`).
+- **Tasks:** Reference `catalogdb` from `Catalog.Api` in `AppHost.cs` (`WithReference(catalogdb).WaitFor(catalogdb)`). In `Catalog.Api`, add EF Core wiring (`AddNpgsqlDbContext`; client package already added in 1.2c) for the `Product` entity (`Id, Name, Description, Price, Stock` per spec §3) and apply the schema (migration or `EnsureCreated`).
 - **Projects touched:** `EShopClaude.AppHost`, `Catalog.Api`.
 - **Verify:** Aspire run. `Catalog.Api` resource goes green (no startup/connection errors in logs). pgAdmin shows the `Product` table created inside `catalogdb` (browser check).
 
 ### Step 1.4 — Connect `Ordering.Api` to `orderingdb` and define the `Order` schema
-- **Tasks:** Reference `orderingdb` from `Ordering.Api` in `AppHost.cs`. In `Ordering.Api`, add data access wiring for the `Order` entity and its `Items` collection (`Id, Items[{ProductId, ProductName, UnitPrice, Quantity}], Total, Status, CreatedDate` per spec §3) and apply the schema.
+- **Tasks:** Reference `orderingdb` from `Ordering.Api` in `AppHost.cs`. In `Ordering.Api`, add data access wiring (`AddNpgsqlDbContext`; client package already added in 1.2c) for the `Order` entity and its `Items` collection (`Id, Items[{ProductId, ProductName, UnitPrice, Quantity}], Total, Status, CreatedDate` per spec §3) and apply the schema.
 - **Projects touched:** `EShopClaude.AppHost`, `Ordering.Api`.
 - **Verify:** Aspire run. `Ordering.Api` resource goes green. pgAdmin shows the `Order` (and items) tables created inside `orderingdb`.
 
 ### Step 1.5 — Connect `Basket.Api` to Redis
-- **Tasks:** Reference the Redis resource from `Basket.Api` in `AppHost.cs`. In `Basket.Api`, add the Redis client wiring (e.g. `StackExchange.Redis` via Aspire's Redis client integration) with no business logic yet.
+- **Tasks:** Reference the Redis resource from `Basket.Api` in `AppHost.cs`. In `Basket.Api`, add the Redis client wiring (`AddRedisClient`; the `Aspire.StackExchange.Redis` package is already added in 1.2c) with no business logic yet.
 - **Projects touched:** `EShopClaude.AppHost`, `Basket.Api`.
 - **Verify:** Aspire run. `Basket.Api` resource goes green with no Redis connection errors in logs.
 
@@ -157,10 +161,10 @@ Build the three pages in journey order, each wired to the real services (no more
 
 | Project | Steps |
 |---|---|
-| `EShopClaude.AppHost` | 0.1, 0.2(ref only), 0.3, 1.1, 1.2, 1.3, 1.4, 1.5, 3.1(maybe) |
-| `Catalog.Api` | 0.2, 1.3, 1.6, 2.1, 2.2 |
-| `Ordering.Api` | 0.2, 1.4, 2.3 |
-| `Basket.Api` | 0.2, 1.5, 2.4, 3.1, 3.2, 3.3 |
+| `EShopClaude.AppHost` | 0.1, 0.2(ref only), 0.3, 1.1a–c, 1.2a–b, 1.3, 1.4, 1.5, 3.1(maybe) |
+| `Catalog.Api` | 0.2, 1.2c(package), 1.3, 1.6, 2.1, 2.2 |
+| `Ordering.Api` | 0.2, 1.2c(package), 1.4, 2.3 |
+| `Basket.Api` | 0.2, 1.2c(package), 1.5, 2.4, 3.1, 3.2, 3.3 |
 | `EShopClaude.Web` | 0.1, 4.1, 4.2, 4.3, 4.4 |
 | `EShopClaude.Tests` / per-service test projects | 0.1, 2.2, 2.3, 2.4, 3.3 |
 
