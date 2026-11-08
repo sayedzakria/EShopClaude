@@ -21,6 +21,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Before committing, the solution must build and `aspire run` must start every resource healthy.
 - Detailed scope lives in `_agenticdev/PROJECT.md`, build order in `_agenticdev/PLAN.md`. Reference them, don't copy them.
 
+## Way of working
+
+The spec-driven delivery rules live in `_agenticdev/WOW.md`.
+
+@_agenticdev/WOW.md
+
 ## Commands
 
 Run from `src/`:
