@@ -1,6 +1,6 @@
 # Catalog.Api — Spec 04: Get product
 
-**Status:** In progress
+**Status:** Done
 
 ## Goal
 
@@ -20,8 +20,8 @@ Expose a single product by id, which the cart page and the checkout flow use to 
 
 ## Scope
 
-- [ ] `GET /products/{id}` returns the product (`Id, Name, Description, Price, Stock`)
-- [ ] Unknown id returns 404
+- [x] `GET /products/{id}` returns the product (`Id, Name, Description, Price, Stock`)
+- [x] Unknown id returns 404
 
 ## Explicit non-goals
 
