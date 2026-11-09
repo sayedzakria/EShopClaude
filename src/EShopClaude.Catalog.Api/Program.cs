@@ -11,7 +11,9 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    scope.ServiceProvider.GetRequiredService<CatalogDbContext>().Database.EnsureCreated();
+    var db = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+    db.Database.EnsureCreated();
+    CatalogSeeder.Seed(db);
 }
 
 app.MapGet("/", () => "Catalog API is running.");
