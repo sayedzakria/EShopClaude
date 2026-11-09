@@ -1,6 +1,6 @@
 # Catalog.Api — Spec 05: Decrement stock
 
-**Status:** In progress
+**Status:** Done
 
 ## Goal
 
@@ -20,13 +20,13 @@ Let `Basket.Api` reserve stock during checkout. The endpoint and its unit tests 
 
 ## Scope
 
-- [ ] `POST /products/{id}/decrement-stock` with body `{ quantity }`
-- [ ] 200 and lower `Stock` when stock is sufficient
-- [ ] 409 when stock is insufficient, stock unchanged
-- [ ] Unknown id returns 404
-- [ ] `quantity` below 1 returns 400, stock unchanged (a negative quantity would otherwise add stock)
-- [ ] The decrement is one atomic conditional update, so concurrent requests cannot take stock below zero
-- [ ] Create the `Catalog.Api` test project (`EShopClaude.Catalog.Api.Tests`); unit tests for success and insufficient stock, with an in-memory store (no real Postgres)
+- [x] `POST /products/{id}/decrement-stock` with body `{ quantity }`
+- [x] 200 and lower `Stock` when stock is sufficient
+- [x] 409 when stock is insufficient, stock unchanged
+- [x] Unknown id returns 404
+- [x] `quantity` below 1 returns 400, stock unchanged (a negative quantity would otherwise add stock)
+- [x] The decrement is one atomic conditional update, so concurrent requests cannot take stock below zero
+- [x] Create the `Catalog.Api` test project (`EShopClaude.Catalog.Api.Tests`); unit tests for success and insufficient stock, with an in-memory store (no real Postgres)
 
 ## Explicit non-goals
 
