@@ -1,6 +1,6 @@
 # Catalog.Api — Spec 03: List products
 
-**Status:** In progress
+**Status:** Done
 
 ## Goal
 
@@ -19,7 +19,7 @@ Expose the full product list so the storefront can render the products page.
 
 ## Scope
 
-- [ ] `GET /products` returns every product (`Id, Name, Description, Price, Stock`)
+- [x] `GET /products` returns every product (`Id, Name, Description, Price, Stock`)
 
 ## Explicit non-goals
 

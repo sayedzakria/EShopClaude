@@ -8,7 +8,7 @@ Suggested build order: catalog 01→05, ordering 01→03, basket 01→05, then b
 |---|---|---|---|
 | catalog-api | [01-product-schema](catalog-api/01-product-schema.md) | `feature/catalog-01-product-schema` | Done |
 | catalog-api | [02-seed-data](catalog-api/02-seed-data.md) | `feature/catalog-02-seed-data` | Done |
-| catalog-api | [03-list-products](catalog-api/03-list-products.md) | `feature/catalog-03-list-products` | Not started |
+| catalog-api | [03-list-products](catalog-api/03-list-products.md) | `feature/catalog-03-list-products` | Done |
 | catalog-api | [04-get-product](catalog-api/04-get-product.md) | `feature/catalog-04-get-product` | Not started |
 | catalog-api | [05-decrement-stock](catalog-api/05-decrement-stock.md) | `feature/catalog-05-decrement-stock` | Not started |
 | ordering-api | [01-order-schema](ordering-api/01-order-schema.md) | `feature/ordering-01-order-schema` | Not started |
