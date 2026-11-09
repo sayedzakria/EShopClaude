@@ -1,6 +1,6 @@
 # Catalog.Api — Spec 01: Product schema
 
-**Status:** Not started
+**Status:** Done
 
 ## Goal
 
