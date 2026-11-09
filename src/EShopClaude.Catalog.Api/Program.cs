@@ -26,6 +26,23 @@ app.MapGet("/products/{id:int}", async (int id, CatalogDbContext db) =>
     await db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id)
         is { } product ? Results.Ok(product) : Results.NotFound());
 
+app.MapPost("/products/{id:int}/decrement-stock", async (int id, DecrementStockRequest request, CatalogDbContext db) =>
+{
+    if (request.Quantity < 1)
+    {
+        return Results.BadRequest();
+    }
+
+    return await ProductStock.DecrementAsync(db, id, request.Quantity) switch
+    {
+        DecrementResult.Ok => Results.Ok(),
+        DecrementResult.InsufficientStock => Results.Conflict(),
+        _ => Results.NotFound()
+    };
+});
+
 app.MapDefaultEndpoints();
 
 app.Run();
+
+public record DecrementStockRequest(int Quantity);

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShopClaude.Basket.Api", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShopClaude.Ordering.Api", "EShopClaude.Ordering.Api\EShopClaude.Ordering.Api.csproj", "{75E0299D-395A-4BC2-BB47-AE32AE534402}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShopClaude.Catalog.Api.Tests", "EShopClaude.Catalog.Api.Tests\EShopClaude.Catalog.Api.Tests.csproj", "{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{75E0299D-395A-4BC2-BB47-AE32AE534402}.Release|x64.Build.0 = Release|Any CPU
 		{75E0299D-395A-4BC2-BB47-AE32AE534402}.Release|x86.ActiveCfg = Release|Any CPU
 		{75E0299D-395A-4BC2-BB47-AE32AE534402}.Release|x86.Build.0 = Release|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Debug|x64.Build.0 = Debug|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Debug|x86.Build.0 = Debug|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Release|x64.ActiveCfg = Release|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Release|x64.Build.0 = Release|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Release|x86.ActiveCfg = Release|Any CPU
+		{6B8F73F8-C430-4A8F-A62E-FAA796D23DDD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
