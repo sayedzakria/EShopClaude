@@ -21,9 +21,10 @@ How our team and Claude Code work on this repository. Scope is in [`PROJECT.md`]
 ## Folder layout
 
 - Specs live in `_agenticdev/microservices/<service>/NN-<short-name>.md`.
-  - Numbered per service, and never renumbered.
 - Every spec follows [`_agenticdev/templates/spec-template.md`](./templates/spec-template.md).
+- A spec's Definition of Done lists checks you can run. Each check gives the exact command or request and the expected result, for example `GET /products/{id}` with an unknown id returns 404. "It works" is not a definition of done.
 - `_agenticdev/microservices/README.md` holds the status table for all specs.
+  - Update it in the same change as any spec that is added, split or renamed.
 
 ## The cycle, per spec
 
@@ -39,7 +40,8 @@ How our team and Claude Code work on this repository. Scope is in [`PROJECT.md`]
 
 ## Ordering rules
 
-- Specs run in number order inside a service.
+- Specs are numbered per service in build order, and run in number order inside a service.
+- Once a spec is merged, its number never changes. A new or split spec takes the next free number, even if it builds earlier.
 - A spec does not start until every spec it depends on is merged to `main`.
 
 ## Session hygiene

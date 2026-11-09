@@ -52,72 +52,37 @@ Stand up the data stores in AppHost and confirm each service can reach its own s
 - **1.2c — Client integration packages (packages only).** Add `Aspire.Npgsql.EntityFrameworkCore.PostgreSQL` 13.6.4 to `Catalog.Api` and `Ordering.Api`; add `Aspire.StackExchange.Redis` 13.6.4 to `Basket.Api`. No code uses them yet. *Verify:* build succeeds; Aspire run — all resources (data stores and the four existing ones) still green.
 - **Projects touched:** `EShopClaude.AppHost`, `Catalog.Api`, `Ordering.Api`, `Basket.Api` (1.2c: `.csproj` only).
 
-### Step 1.3 — Connect `Catalog.Api` to `catalogdb` and define the `Product` schema
-- **Tasks:** Reference `catalogdb` from `Catalog.Api` in `AppHost.cs` (`WithReference(catalogdb).WaitFor(catalogdb)`). In `Catalog.Api`, add EF Core wiring (`AddNpgsqlDbContext`; client package already added in 1.2c) for the `Product` entity (`Id, Name, Description, Price, Stock` per spec §3) and apply the schema (migration or `EnsureCreated`).
-- **Projects touched:** `EShopClaude.AppHost`, `Catalog.Api`.
-- **Verify:** Aspire run. `Catalog.Api` resource goes green (no startup/connection errors in logs). pgAdmin shows the `Product` table created inside `catalogdb` (browser check).
-
-### Step 1.4 — Connect `Ordering.Api` to `orderingdb` and define the `Order` schema
-- **Tasks:** Reference `orderingdb` from `Ordering.Api` in `AppHost.cs`. In `Ordering.Api`, add data access wiring (`AddNpgsqlDbContext`; client package already added in 1.2c) for the `Order` entity and its `Items` collection (`Id, Items[{ProductId, ProductName, UnitPrice, Quantity}], Total, Status, CreatedDate` per spec §3) and apply the schema.
-- **Projects touched:** `EShopClaude.AppHost`, `Ordering.Api`.
-- **Verify:** Aspire run. `Ordering.Api` resource goes green. pgAdmin shows the `Order` (and items) tables created inside `orderingdb`.
-
-### Step 1.5 — Connect `Basket.Api` to Redis
-- **Tasks:** Reference the Redis resource from `Basket.Api` in `AppHost.cs`. In `Basket.Api`, add the Redis client wiring (`AddRedisClient`; the `Aspire.StackExchange.Redis` package is already added in 1.2c) with no business logic yet.
-- **Projects touched:** `EShopClaude.AppHost`, `Basket.Api`.
-- **Verify:** Aspire run. `Basket.Api` resource goes green with no Redis connection errors in logs.
-
-### Step 1.6 — Seed Catalog data
-- **Tasks:** Add a startup seed step in `Catalog.Api` that inserts a small fixed set of demo products (name, description, price, stock) into `catalogdb` if empty.
-- **Projects touched:** `Catalog.Api`.
-- **Verify:** Aspire run. pgAdmin shows seeded rows in the `Product` table (browser check). Re-running AppHost doesn't duplicate rows.
-
 ---
 
 ## Phase 2 — Microservices, one by one
 
-Build each service's full API surface and unit-test its logic in isolation, before wiring cross-service calls.
+Each service is built as a series of small specs, one feature branch each. Scope, dependencies, branch names, status and Definition of Done live in the spec files and in [`microservices/README.md`](./microservices/README.md), not here. Build order: Catalog, then Ordering, then Basket (01–05).
 
-### Step 2.1 — Catalog.Api: product endpoints
-- **Tasks:** Implement `GET /products`, `GET /products/{id}` per spec §3.
-- **Projects touched:** `Catalog.Api`.
-- **Verify:** Build. Aspire run + HTTP check: `GET /products` returns the seeded list; `GET /products/{id}` returns one product and 404 for an unknown id.
+### Catalog.Api
+**Owns:** product data in `catalogdb`: listing, lookup and stock decrement.
+**Specs:** [`microservices/catalog-api/`](./microservices/catalog-api/)
+`01-product-schema.md`, `02-seed-data.md`, `03-list-products.md`, `04-get-product.md`, `05-decrement-stock.md`
 
-### Step 2.2 — Catalog.Api: stock decrement + unit tests
-- **Tasks:** Implement `POST /products/{id}/decrement-stock` (body `{ quantity }`, 200 on success, 409/400 on insufficient stock, per spec §3). Add unit tests per spec §8: success case and insufficient-stock case, using an in-memory/mocked data store (no real Postgres).
-- **Projects touched:** `Catalog.Api`; new `Catalog.Api.Tests` (or shared `EShopClaude.Tests` — pick one project and keep it consistent across all three services).
-- **Verify:** Unit tests pass (`dotnet test`). Aspire run + HTTP check: decrementing within stock succeeds and lowers `Stock`; decrementing past available stock returns the error status.
+### Ordering.Api
+**Owns:** order data in `orderingdb`: the order snapshot created at checkout, and its lookup.
+**Specs:** [`microservices/ordering-api/`](./microservices/ordering-api/)
+`01-order-schema.md`, `02-create-order.md`, `03-get-order.md`
 
-### Step 2.3 — Ordering.Api: order creation + detail + unit tests
-- **Tasks:** Implement `POST /orders` (computes `Total`, sets `Status = "Placed"`, `CreatedDate = now`, returns created order with `Id`) and `GET /orders/{id}` per spec §3. Add unit tests per spec §8: order creation and total calculation, using an in-memory/mocked store.
-- **Projects touched:** `Ordering.Api`; `Ordering.Api.Tests` (or shared test project).
-- **Verify:** Unit tests pass. Aspire run + HTTP check: `POST /orders` with sample items returns a created order with correct computed `Total`; `GET /orders/{id}` returns it back; unknown id returns 404.
-
-### Step 2.4 — Basket.Api: basket item CRUD + unit tests
-- **Tasks:** Implement `GET /baskets/{basketId}`, `POST /baskets/{basketId}/items`, `PUT /baskets/{basketId}/items/{productId}`, `DELETE /baskets/{basketId}/items/{productId}`, `DELETE /baskets/{basketId}` per spec §3 (storing only `{productId, quantity}` pairs in Redis). Add unit tests per spec §8: add/increment, update quantity, remove, clear — using a mocked/in-memory basket store.
-- **Projects touched:** `Basket.Api`; `Basket.Api.Tests` (or shared test project). *(Checkout endpoint is deliberately excluded from this step — it needs Catalog.Api/Ordering.Api and is built in Phase 3.)*
-- **Verify:** Unit tests pass. Aspire run + HTTP check: full CRUD cycle against a basket id — add two lines, increment one via repeated add, change quantity via PUT, remove a line, confirm `GET` reflects state, clear the basket and confirm it's empty.
+### Basket.Api (basket operations)
+**Owns:** baskets in Redis, stored as `{productId, quantity}` pairs only.
+**Specs:** [`microservices/basket-api/`](./microservices/basket-api/)
+`01-get-basket.md`, `02-add-item.md`, `03-update-item-quantity.md`, `04-remove-item.md`, `05-clear-basket.md`
 
 ---
 
 ## Phase 3 — Service communication & checkout
 
-Wire the one place services call each other.
+The one place services call each other. Starts only after the Catalog and Ordering specs it depends on are merged.
 
-### Step 3.1 — Basket.Api → Catalog.Api service discovery wiring
-- **Tasks:** Add an `HttpClient` in `Basket.Api` configured for Aspire service discovery against `Catalog.Api` (`WithReference`/`WaitFor` already set in Step 0.3 — add the typed client / base address here). No checkout logic yet — just a throwaway call path (or defer and combine with 3.3) to prove connectivity.
-- **Projects touched:** `Basket.Api`, `AppHost.cs` (if the reference needs adjusting from Step 0.3).
-- **Verify:** Build. Aspire run: trace check — a manual call from `Basket.Api` to `Catalog.Api`'s `GET /products/{id}` shows up as a linked trace in the Aspire dashboard.
-
-### Step 3.2 — Basket.Api → Ordering.Api service discovery wiring
-- **Tasks:** Same as 3.1, targeting `Ordering.Api`.
-- **Projects touched:** `Basket.Api`.
-- **Verify:** Aspire run: trace check — a manual call from `Basket.Api` to `Ordering.Api`'s `POST /orders` shows up as a linked trace.
-
-### Step 3.3 — Checkout orchestration + unit tests
-- **Tasks:** Implement `POST /baskets/{basketId}/checkout` in `Basket.Api` per spec §5: load basket from Redis; for each line, call Catalog.Api for price/name then decrement stock, aborting with no order/no basket-clear on any failure (no compensation, per spec §7); on full success, call Ordering.Api to create the order, then clear the basket and return `{ orderId }`. Add unit tests per spec §8 for the orchestration logic, mocking the Catalog.Api and Ordering.Api HTTP calls.
-- **Projects touched:** `Basket.Api`; its test project.
-- **Verify:** Unit tests pass (happy path + insufficient-stock-aborts path). Aspire run + HTTP check: checking out a basket with sufficient stock returns an `orderId`, basket is empty afterward, order is fetchable from `Ordering.Api`, and `Catalog.Api` stock is reduced. Checking out with insufficient stock returns an error, basket is untouched, and no order was created. Traces show the full `Basket.Api → Catalog.Api` + `Basket.Api → Ordering.Api` chain for one checkout call.
+### Basket.Api (checkout)
+**Owns:** checkout orchestration across Catalog.Api and Ordering.Api.
+**Specs:** [`microservices/basket-api/`](./microservices/basket-api/)
+`06-checkout-reserve-stock.md`, `07-checkout-place-order.md`
 
 ---
 
@@ -161,17 +126,17 @@ Build the three pages in journey order, each wired to the real services (no more
 
 | Project | Steps |
 |---|---|
-| `EShopClaude.AppHost` | 0.1, 0.2(ref only), 0.3, 1.1a–c, 1.2a–b, 1.3, 1.4, 1.5, 3.1(maybe) |
-| `Catalog.Api` | 0.2, 1.2c(package), 1.3, 1.6, 2.1, 2.2 |
-| `Ordering.Api` | 0.2, 1.2c(package), 1.4, 2.3 |
-| `Basket.Api` | 0.2, 1.2c(package), 1.5, 2.4, 3.1, 3.2, 3.3 |
+| `EShopClaude.AppHost` | 0.1, 0.2(ref only), 0.3, 1.1a–c, 1.2a–b, plus each service's own registration inside its specs |
+| `Catalog.Api` | 0.2, 1.2c(package), catalog-api specs 01–05 |
+| `Ordering.Api` | 0.2, 1.2c(package), ordering-api specs 01–03 |
+| `Basket.Api` | 0.2, 1.2c(package), basket-api specs 01–07 |
 | `EShopClaude.Web` | 0.1, 4.1, 4.2, 4.3, 4.4 |
-| `EShopClaude.Tests` / per-service test projects | 0.1, 2.2, 2.3, 2.4, 3.3 |
+| `EShopClaude.Tests` / per-service test projects | 0.1, then inside the service specs |
 
 ## Review focus (spec requirements most likely to be missed if skipped)
 
-- **Insufficient-stock checkout leaves no order and an untouched basket** (spec §5 step 2, §7) — covered by Step 3.3's unit test and Step 4.3's browser check.
-- **No stock compensation/rollback on partial multi-item failure** (spec §7) — explicitly a non-requirement; don't accidentally add rollback logic in Step 3.3.
-- **No API versioning/pagination/filtering on `/products`** (spec §7) — keep Step 2.1 to the plain full-list endpoint.
+- **Insufficient-stock checkout leaves no order and an untouched basket** (spec §5 step 2, §7) — covered by basket-api/06 and /07 and Step 4.3's browser check.
+- **No stock compensation/rollback on partial multi-item failure** (spec §7) — explicitly a non-requirement; don't accidentally add rollback logic in basket-api/06 or /07.
+- **No API versioning/pagination/filtering on `/products`** (spec §7) — keep catalog-api/03 to the plain full-list endpoint.
 - **Basket id scoped to the Blazor circuit, not cookies/storage** (spec §4) — covered by Step 4.1's two-session browser check.
 - **No order list/history beyond the single just-placed order** (spec §7) — keep Step 4.4 to single-order lookup by id only, no listing endpoint/page.
