@@ -1,6 +1,6 @@
 # Catalog.Api — Spec 02: Seed data
 
-**Status:** In progress
+**Status:** Done
 
 ## Goal
 
