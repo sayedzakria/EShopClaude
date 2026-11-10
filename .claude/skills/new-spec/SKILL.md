@@ -2,7 +2,6 @@
 name: new-spec
 description: Use when preparing one feature spec for the spec-driven workflow in _agenticdev/WOW.md, either drafting a new spec or filling the gaps in an existing one.
 argument-hint: '<service> <NN> [slug] ["title"]'
-disable-model-invocation: true
 allowed-tools: Read, Write, Edit, Glob
 ---
 

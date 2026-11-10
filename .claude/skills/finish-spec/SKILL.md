@@ -2,7 +2,6 @@
 name: finish-spec
 description: Use when implementing, verifying and merging one spec on its feature branch, covering steps 5 to 9 of the cycle in _agenticdev/WOW.md.
 argument-hint: '<service> <NN>'
-disable-model-invocation: true
 allowed-tools:
   - Read
   - Write

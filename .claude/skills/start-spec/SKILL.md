@@ -2,7 +2,6 @@
 name: start-spec
 description: Use when starting work on one ready spec from _agenticdev/microservices, covering steps 2 to 4 of the cycle in _agenticdev/WOW.md.
 argument-hint: '<service> <NN>'
-disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob
