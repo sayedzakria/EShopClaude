@@ -1,6 +1,6 @@
 # Ordering.Api — Spec 01: Order schema
 
-**Status:** Not started
+**Status:** Done (40bbd52)
 
 ## Goal
 
