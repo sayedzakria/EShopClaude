@@ -17,6 +17,11 @@ using (var scope = app.Services.CreateScope())
 
 app.MapGet("/", () => "Ordering API is running.");
 
+app.MapPost("/orders", async (CreateOrderRequest request, OrderingDbContext db) =>
+    await OrderCreation.CreateAsync(db, request) is { } order
+        ? Results.Ok(OrderResponse.From(order))
+        : Results.BadRequest());
+
 app.MapDefaultEndpoints();
 
 app.Run();
