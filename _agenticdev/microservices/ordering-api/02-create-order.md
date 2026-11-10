@@ -1,6 +1,6 @@
 # Ordering.Api — Spec 02: Create order
 
-**Status:** Not started
+**Status:** Done (e64653f)
 
 ## Goal
 

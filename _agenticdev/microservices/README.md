@@ -12,7 +12,7 @@ Suggested build order: catalog 01→05, ordering 01→03, basket 01→05, then b
 | catalog-api | [04-get-product](catalog-api/04-get-product.md) | `feature/catalog-04-get-product` | Done |
 | catalog-api | [05-decrement-stock](catalog-api/05-decrement-stock.md) | `feature/catalog-05-decrement-stock` | Done |
 | ordering-api | [01-order-schema](ordering-api/01-order-schema.md) | `feature/ordering-01-order-schema` | Done (40bbd52) |
-| ordering-api | [02-create-order](ordering-api/02-create-order.md) | `feature/ordering-02-create-order` | Not started |
+| ordering-api | [02-create-order](ordering-api/02-create-order.md) | `feature/ordering-02-create-order` | Done (e64653f) |
 | ordering-api | [03-get-order](ordering-api/03-get-order.md) | `feature/ordering-03-get-order` | Not started |
 | basket-api | [01-get-basket](basket-api/01-get-basket.md) | `feature/basket-01-get-basket` | Not started |
 | basket-api | [02-add-item](basket-api/02-add-item.md) | `feature/basket-02-add-item` | Not started |
