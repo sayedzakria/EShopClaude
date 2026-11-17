@@ -1,6 +1,6 @@
 # Basket.Api — Spec 02: Add item
 
-**Status:** Not started
+**Status:** Done (b011700)
 
 ## Goal
 
