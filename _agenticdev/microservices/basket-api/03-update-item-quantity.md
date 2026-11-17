@@ -1,6 +1,6 @@
 # Basket.Api — Spec 03: Update item quantity
 
-**Status:** Not started
+**Status:** Done (4dbd0e0)
 
 ## Goal
 
