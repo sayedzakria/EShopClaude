@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShopClaude.Catalog.Api.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShopClaude.Ordering.Api.Tests", "EShopClaude.Ordering.Api.Tests\EShopClaude.Ordering.Api.Tests.csproj", "{2F2C6513-9B07-4E12-A57C-52CBEE190FA3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShopClaude.Basket.Api.Tests", "EShopClaude.Basket.Api.Tests\EShopClaude.Basket.Api.Tests.csproj", "{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,18 @@ Global
 		{2F2C6513-9B07-4E12-A57C-52CBEE190FA3}.Release|x64.Build.0 = Release|Any CPU
 		{2F2C6513-9B07-4E12-A57C-52CBEE190FA3}.Release|x86.ActiveCfg = Release|Any CPU
 		{2F2C6513-9B07-4E12-A57C-52CBEE190FA3}.Release|x86.Build.0 = Release|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Debug|x64.Build.0 = Debug|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Debug|x86.Build.0 = Debug|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Release|x64.ActiveCfg = Release|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Release|x64.Build.0 = Release|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D6C8E86-B1ED-4AF8-801E-C0710A478BD3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
