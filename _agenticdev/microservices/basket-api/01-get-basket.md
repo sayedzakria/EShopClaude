@@ -1,6 +1,6 @@
 # Basket.Api — Spec 01: Get basket
 
-**Status:** Not started
+**Status:** Done (aa791d2)
 
 ## Goal
 

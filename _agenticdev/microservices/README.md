@@ -14,7 +14,7 @@ Suggested build order: catalog 01→05, ordering 01→03, basket 01→05, then b
 | ordering-api | [01-order-schema](ordering-api/01-order-schema.md) | `feature/ordering-01-order-schema` | Done (40bbd52) |
 | ordering-api | [02-create-order](ordering-api/02-create-order.md) | `feature/ordering-02-create-order` | Done (e64653f) |
 | ordering-api | [03-get-order](ordering-api/03-get-order.md) | `feature/ordering-03-get-order` | Not started |
-| basket-api | [01-get-basket](basket-api/01-get-basket.md) | `feature/basket-01-get-basket` | Not started |
+| basket-api | [01-get-basket](basket-api/01-get-basket.md) | `feature/basket-01-get-basket` | Done (aa791d2) |
 | basket-api | [02-add-item](basket-api/02-add-item.md) | `feature/basket-02-add-item` | Not started |
 | basket-api | [03-update-item-quantity](basket-api/03-update-item-quantity.md) | `feature/basket-03-update-item-quantity` | Not started |
 | basket-api | [04-remove-item](basket-api/04-remove-item.md) | `feature/basket-04-remove-item` | Not started |
