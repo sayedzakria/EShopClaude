@@ -14,5 +14,8 @@ public class RedisBasketStore(IConnectionMultiplexer redis) : IBasketStore
             .ToList();
     }
 
+    public Task AddAsync(Guid basketId, int productId, int quantity) =>
+        redis.GetDatabase().HashIncrementAsync(Key(basketId), productId, quantity);
+
     private static RedisKey Key(Guid basketId) => $"basket:{basketId}";
 }
