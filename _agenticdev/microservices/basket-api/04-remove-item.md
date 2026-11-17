@@ -1,6 +1,6 @@
 # Basket.Api — Spec 04: Remove item
 
-**Status:** Not started
+**Status:** Done (5b80ee5)
 
 ## Goal
 
