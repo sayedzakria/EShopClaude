@@ -21,6 +21,19 @@ app.MapPost("/baskets/{basketId:guid}/items", async (Guid basketId, AddItemReque
         ? Results.Ok(new BasketResponse(basketId, items))
         : Results.BadRequest());
 
+app.MapPut("/baskets/{basketId:guid}/items/{productId:int}",
+    async (Guid basketId, int productId, UpdateItemQuantityRequest request, IBasketStore store) =>
+    {
+        var result = await BasketOperations.UpdateItemQuantityAsync(store, basketId, productId, request);
+
+        return result.Outcome switch
+        {
+            UpdateItemOutcome.Updated => Results.Ok(new BasketResponse(basketId, result.Items!)),
+            UpdateItemOutcome.Invalid => Results.BadRequest(),
+            _ => Results.NotFound(),
+        };
+    });
+
 app.MapDefaultEndpoints();
 
 app.Run();

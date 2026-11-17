@@ -32,4 +32,15 @@ public sealed class InMemoryBasketStore : IBasketStore
         lines[productId] = lines.GetValueOrDefault(productId) + quantity;
         return Task.CompletedTask;
     }
+
+    public Task<bool> SetQuantityAsync(Guid basketId, int productId, int quantity)
+    {
+        if (!_baskets.TryGetValue(basketId, out var lines) || !lines.ContainsKey(productId))
+        {
+            return Task.FromResult(false);
+        }
+
+        lines[productId] = quantity;
+        return Task.FromResult(true);
+    }
 }
