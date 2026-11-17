@@ -158,4 +158,74 @@ public sealed class BasketOperationsTests
         Assert.Equal([new BasketItem(1, 9)], await _store.GetAsync(_basketId));
         Assert.Equal([new BasketItem(1, 4)], await _store.GetAsync(otherBasketId));
     }
+
+    [Fact]
+    public async Task RemoveItem_ExistingLine_ReturnsRemainingLinesAndLeavesOthersUnchanged()
+    {
+        await _store.AddAsync(_basketId, 1, 2);
+        await _store.AddAsync(_basketId, 3, 5);
+
+        var items = await BasketOperations.RemoveItemAsync(_store, _basketId, 1);
+
+        Assert.Equal([new BasketItem(3, 5)], items);
+        Assert.Equal([new BasketItem(3, 5)], await _store.GetAsync(_basketId));
+    }
+
+    [Fact]
+    public async Task RemoveItem_ProductNotInBasket_ReturnsNullAndBasketUnchanged()
+    {
+        await _store.AddAsync(_basketId, 1, 2);
+
+        var items = await BasketOperations.RemoveItemAsync(_store, _basketId, 2);
+
+        Assert.Null(items);
+        Assert.Equal([new BasketItem(1, 2)], await _store.GetAsync(_basketId));
+    }
+
+    [Fact]
+    public async Task RemoveItem_UnknownBasket_ReturnsNullAndCreatesNothing()
+    {
+        var items = await BasketOperations.RemoveItemAsync(_store, _basketId, 1);
+
+        Assert.Null(items);
+        Assert.False(_store.Contains(_basketId));
+    }
+
+    [Fact]
+    public async Task RemoveItem_LastLine_ReturnsEmptyListAndRemovesBasket()
+    {
+        await _store.AddAsync(_basketId, 1, 2);
+
+        var items = await BasketOperations.RemoveItemAsync(_store, _basketId, 1);
+
+        Assert.NotNull(items);
+        Assert.Empty(items);
+        Assert.False(_store.Contains(_basketId));
+    }
+
+    [Fact]
+    public async Task RemoveItem_SameLineTwice_ReturnsNullSecondTime()
+    {
+        await _store.AddAsync(_basketId, 1, 2);
+        await _store.AddAsync(_basketId, 3, 1);
+
+        await BasketOperations.RemoveItemAsync(_store, _basketId, 1);
+        var second = await BasketOperations.RemoveItemAsync(_store, _basketId, 1);
+
+        Assert.Null(second);
+        Assert.Equal([new BasketItem(3, 1)], await _store.GetAsync(_basketId));
+    }
+
+    [Fact]
+    public async Task RemoveItem_OneBasket_DoesNotAffectAnotherBasket()
+    {
+        var otherBasketId = Guid.NewGuid();
+        await _store.AddAsync(_basketId, 1, 2);
+        await _store.AddAsync(otherBasketId, 1, 4);
+
+        await BasketOperations.RemoveItemAsync(_store, _basketId, 1);
+
+        Assert.False(_store.Contains(_basketId));
+        Assert.Equal([new BasketItem(1, 4)], await _store.GetAsync(otherBasketId));
+    }
 }

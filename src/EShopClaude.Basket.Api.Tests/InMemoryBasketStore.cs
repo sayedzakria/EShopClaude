@@ -43,4 +43,20 @@ public sealed class InMemoryBasketStore : IBasketStore
         lines[productId] = quantity;
         return Task.FromResult(true);
     }
+
+    public Task<bool> RemoveAsync(Guid basketId, int productId)
+    {
+        if (!_baskets.TryGetValue(basketId, out var lines) || !lines.Remove(productId))
+        {
+            return Task.FromResult(false);
+        }
+
+        // Mirror Redis: a hash with no fields no longer exists.
+        if (lines.Count == 0)
+        {
+            _baskets.Remove(basketId);
+        }
+
+        return Task.FromResult(true);
+    }
 }

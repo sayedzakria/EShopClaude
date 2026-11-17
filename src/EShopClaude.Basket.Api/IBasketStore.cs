@@ -11,4 +11,10 @@ public interface IBasketStore
     /// Returns false (and writes nothing) when the line does not exist.
     /// </summary>
     Task<bool> SetQuantityAsync(Guid basketId, int productId, int quantity);
+
+    /// <summary>
+    /// Removes the product's line from the basket. Returns false (and writes nothing) when the line
+    /// does not exist. Removing the last line removes the basket itself.
+    /// </summary>
+    Task<bool> RemoveAsync(Guid basketId, int productId);
 }

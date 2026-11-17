@@ -29,5 +29,9 @@ public class RedisBasketStore(IConnectionMultiplexer redis) : IBasketStore
         return await transaction.ExecuteAsync();
     }
 
+    // HDEL is atomic; Redis deletes the key itself when its last field is removed.
+    public Task<bool> RemoveAsync(Guid basketId, int productId) =>
+        redis.GetDatabase().HashDeleteAsync(Key(basketId), productId);
+
     private static RedisKey Key(Guid basketId) => $"basket:{basketId}";
 }
