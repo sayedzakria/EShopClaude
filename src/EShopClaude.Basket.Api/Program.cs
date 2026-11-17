@@ -34,6 +34,11 @@ app.MapPut("/baskets/{basketId:guid}/items/{productId:int}",
         };
     });
 
+app.MapDelete("/baskets/{basketId:guid}/items/{productId:int}", async (Guid basketId, int productId, IBasketStore store) =>
+    await BasketOperations.RemoveItemAsync(store, basketId, productId) is { } items
+        ? Results.Ok(new BasketResponse(basketId, items))
+        : Results.NotFound());
+
 app.MapDefaultEndpoints();
 
 app.Run();

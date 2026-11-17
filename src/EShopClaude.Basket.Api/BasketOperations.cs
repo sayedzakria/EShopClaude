@@ -37,6 +37,20 @@ public static class BasketOperations
 
         return new UpdateItemResult(UpdateItemOutcome.Updated, await store.GetAsync(basketId));
     }
+
+    /// <summary>
+    /// Removes the product's line from the basket.
+    /// Returns the basket after the delete (possibly empty), or null when the line does not exist.
+    /// </summary>
+    public static async Task<List<BasketItem>?> RemoveItemAsync(IBasketStore store, Guid basketId, int productId)
+    {
+        if (!await store.RemoveAsync(basketId, productId))
+        {
+            return null;
+        }
+
+        return await store.GetAsync(basketId);
+    }
 }
 
 public enum UpdateItemOutcome
